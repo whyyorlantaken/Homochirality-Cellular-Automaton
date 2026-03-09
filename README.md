@@ -1,2 +1,2 @@
 # Homochirality-Cellular-Automaton
-Our project for Hack4Sages: astrobiology of the origins of life global hackaton organized by ETH Zurich.
+Our project for Hack4Sages on Astrobiology of the origins of life. Global hackaton organized by ETH Zurich.
