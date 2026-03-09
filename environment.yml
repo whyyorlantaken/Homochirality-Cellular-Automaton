@@ -1,0 +1,11 @@
+name: amar
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - numpy
+  - pyyaml
+  - matplotlib
+  - pandas
+  - pip

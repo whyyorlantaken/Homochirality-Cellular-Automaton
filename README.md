@@ -50,18 +50,16 @@ def main():
 
     # Configuration file
     parser = argparse.ArgumentParser(
-	    description="Run Chiral CA Simulation"
-	    )
+      description="Run homochirality cellular automaton digital twin with specified configuration"
+      )
     parser.add_argument("config", 
 	    help="Path to the .yaml configuration file"
 	    )
     args = parser.parse_args()
 
-    # Parameters
     with open(args.config, 'r') as f:
         config = yaml.safe_load(f)
 
-    # Initialize and run the digital twin
     twin = DigitalTwin(config)
     twin.run()
 
@@ -72,32 +70,28 @@ if __name__ == "__main__":
 ## Example `config.yaml`
 
 ```yaml
-# Simulation Environment
 simulation:
   grid_size: [128, 128]
   total_steps: 1000
   boundary_condition: "periodic"
-  random_seed: 42
 
-# Base Probabilities (unscaled)
 probabilities:
-  p_neutral: 0.05      # Spontaneous neutrality (racemization)
-  p_chiral: 0.02       # Spontaneous chirality
-  p_copy: 0.1          # Diffusion (neighbor copying)
+  p_neutral: 0.05      
+  p_chiral: 0.02
+  p_copy: 0.1
 
-# Chaos Parameter Settings
 chaos:
-  epsilon: 1.0         # Default ε value
-  mode: "pulse"        # Options: "constant", "pulse", "linear_increase"
+  epsilon: 1.0         
+  seed: 42             
+  mode: "constant"
+
   pulse:
     start_step: 400
     end_step: 500
-    magnitude: 5.0     # The ε spike value
+    magnitude: 5.0 
 
-# Initial Conditions
-initial_state:
-  type: "achiral_soup" # Options: "achiral_soup", "random_mix", "seeds"
-  seeds:
-    count: 5
-    radius: 2
+  linear_increase:
+    start_step: 400
+    end_step: 500
+    max_epsilon: 5.0
 ```
