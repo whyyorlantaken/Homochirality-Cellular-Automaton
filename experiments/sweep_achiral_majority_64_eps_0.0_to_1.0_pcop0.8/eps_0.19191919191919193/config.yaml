@@ -1,0 +1,22 @@
+chaos:
+  constant:
+    epsilon: 0.19191919191919193
+  linear:
+    end_epsilon: 1.0
+    start_epsilon: 0.0
+  mode: constant
+  pulse:
+    end_step: 50
+    magnitude: 5.0
+    start_step: 40
+probs:
+  dist_type: uniform
+  p_chiral: 0.1
+  p_copy: 0.8
+  p_neutral: 0.1
+  seed: 42
+simulation:
+  boundary_condition: periodic
+  save_evolution: true
+  save_images: true
+  total_steps: 100

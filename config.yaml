@@ -1,5 +1,5 @@
 simulation:
-  total_steps: 100
+  total_steps: 250
   boundary_condition: "periodic"
   save_evolution: True
   save_images: True
