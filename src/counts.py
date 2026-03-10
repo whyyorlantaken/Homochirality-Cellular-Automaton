@@ -8,6 +8,9 @@
 
 import numpy as np
 
+def chiralPopulation():
+    pass
+
 def getMooreCounts(array, boundaries = 'periodic'):
     """
     Compute counts of each state in the Moore neighborhood for each cell in the input 2D array.
