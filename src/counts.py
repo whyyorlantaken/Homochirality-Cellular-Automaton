@@ -24,10 +24,10 @@ def getMooreCounts(array, boundaries = 'periodic'):
     numpy.ndarray
         A 2D array of shape (N, n_states + 1) where N is the total number of cells in the grid and n_states is the maximum state value in the input array. The first column contains the original cell states, and the subsequent columns contain the counts of each state in the Moore neighborhood.
     """
-    n_states = np.max(array) + 1
+    # n_states = np.max(array) + 1
 
     N            = array.size
-    result       = np.zeros((N, n_states + 1), dtype=int)
+    result       = np.zeros((N, 4), dtype=int)
     result[:, 0] = array.ravel()
 
     if boundaries == 'periodic':
@@ -39,7 +39,7 @@ def getMooreCounts(array, boundaries = 'periodic'):
 
                 shifted = np.roll(np.roll(array, dx, axis=0), dy, axis=1)
                 
-                for s in range(n_states):
+                for s in range(3):
                     result[:, s + 1] += (shifted == s).ravel()
 
     return result 
