@@ -17,7 +17,7 @@
 #         'total_steps': 250,
 #         'boundary_condition': 'periodic',
 #         'save_evolution': True
-#         'save_images': True  # This is todo
+#         'save_images': True 
 #     },
 #     'probs': {
 #         'dist_type': 'uniform',
@@ -133,6 +133,9 @@ class ChiralTwin:
         
         # Time evolution loop
         for i in range(self.total_steps):
+            
+            if self.save_images:
+                images[i] = self.array
 
             # Modes logic is done here.
             if self.chaos_mode == 'pulse':
@@ -167,9 +170,6 @@ class ChiralTwin:
             list_0.append(count_dict.get(0, 0))
             list_1.append(count_dict.get(1, 0))
             list_2.append(count_dict.get(2, 0))
-
-            if self.save_images:
-                images[i] = array
 
         # Save evolution
         if self.save_evolution:
