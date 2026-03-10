@@ -9,7 +9,43 @@
     # update states (time evolution) (applying rules: deterministic and then stochastic or the other way around?)
     # save states population and images (arrays) (for visualization)
 
+# config = {
+
+#     'simulation': {
+#         'total_steps': 250,
+#         'boundary_condition': 'periodic',
+#         'save_evolution': True
+#         'save_images': True  # This is todo
+#     },
+#     'probs': {
+#         'dist_type': 'uniform',
+#         'seed': 42,
+#         'p_neutral': 0.1,
+#         'p_chiral': 0.1,
+#         'p_copy': 0.8
+#     },
+#     'chaos': {
+#         'mode': 'constant',
+
+#         'constant': {
+#             'epsilon': 0.1
+#         },
+
+#         'pulse': {
+#             'start_step': 30,
+#             'end_step': 60,
+#             'magnitude': 0.5
+#         },
+
+#         'linear': {
+#             'start_epsilon': 0.0,
+#             'end_epsilon': 1.0
+#         }
+#     }
+# }
+
 import numpy as np
+import pandas as pd
 
 from .counts import getMooreCounts
 from .rules import *
@@ -38,6 +74,12 @@ class ChiralTwin:
 
         self.total_steps        = config['simulation']['total_steps']
         self.boundary_condition = config['simulation']['boundary_condition']
+        self.save_evolution     = config['simulation']['save_evolution']
+        self.save_images        = config['simulation']['save_images']
+
+        self.dist_type = config['probs']['dist_type']
+        self.seed      = config['probs']['seed']
+        np.random.seed(self.seed)
 
         self.p_neutral = config['probs']['p_neutral']
         self.p_chiral  = config['probs']['p_chiral']
@@ -54,12 +96,9 @@ class ChiralTwin:
             self.pulse_end       = config['chaos']['pulse']['end_step']
             self.pulse_magnitude = config['chaos']['pulse']['magnitude']
 
-        if self.chaos_mode == 'linear_increase':
-            self.lin_start_epsilon = config['chaos']['linear_increase']['start_epsilon']
-            self.lin_end_epsilon   = config['chaos']['linear_increase']['end_epsilon']
-
-        self.seed    = config['chaos']['seed']
-        # np.random.seed(self.seed)
+        if self.chaos_mode == 'linear':
+            self.lin_start_epsilon = config['chaos']['linear']['start_epsilon']
+            self.lin_end_epsilon   = config['chaos']['linear']['end_epsilon']
 
     def timeEvolution(self):
 
@@ -82,7 +121,7 @@ class ChiralTwin:
                 else:
                     self.epsilon = 0
 
-            elif self.chaos_mode == 'linear_increase':
+            elif self.chaos_mode == 'linear':
                 self.epsilon = np.interp(i, [0, self.total_steps], [self.lin_start_epsilon, self.lin_end_epsilon])
 
             # Moore counts + each rule in order, chaining output into the next step.
@@ -93,13 +132,13 @@ class ChiralTwin:
             array        = mutualInhibition(neighborhood).reshape(self.array.shape)
 
             neighborhood = getMooreCounts(array, boundaries = self.boundary_condition)
-            array        = spontaneusNeutrality(self.epsilon, self.p_neutral, neighborhood).reshape(self.array.shape)
+            array        = spontaneusNeutrality(self.epsilon, self.p_neutral, neighborhood, self.dist_type).reshape(self.array.shape)
 
             neighborhood = getMooreCounts(array, boundaries = self.boundary_condition)
-            array        = spontaneousChirality(self.epsilon, self.p_chiral, neighborhood).reshape(self.array.shape)
+            array        = spontaneousChirality(self.epsilon, self.p_chiral, neighborhood, self.dist_type).reshape(self.array.shape)
 
             neighborhood = getMooreCounts(array, boundaries = self.boundary_condition)
-            array        = diffusion(self.epsilon, self.p_copy, neighborhood).reshape(self.array.shape)
+            array        = diffusion(self.epsilon, self.p_copy, neighborhood, self.dist_type).reshape(self.array.shape)
 
             self.array   = array
 
@@ -108,5 +147,16 @@ class ChiralTwin:
             list_0.append(count_dict.get(0, 0))
             list_1.append(count_dict.get(1, 0))
             list_2.append(count_dict.get(2, 0))
+
+
+        if self.save_evolution:
+
+            name = f"{self.chaos_mode}-{self.epsilon}_dist-{self.dist_type}.csv"
+
+            if self.chaos_mode == 'pulse':
+                name = f"{self.chaos_mode}-{self.pulse_magnitude}_dist-{self.dist_type}.csv"
+
+            df = pd.DataFrame({'Achiral': list_0, 'Chiral A': list_1, 'Chiral B': list_2})
+            df.to_csv(f"data/time-evolution/{name}", index = False)
 
         return list_0, list_1, list_2

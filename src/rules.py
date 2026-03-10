@@ -73,7 +73,7 @@ def mutualInhibition(neighborhood):
 # Stochastic Rules
 ########################
 
-def spontaneusNeutrality(epsilon, p_neutral, neighborhood):
+def spontaneusNeutrality(epsilon, p_neutral, neighborhood, dist_type='uniform'):
     """
     Reads a neighborhood array with the following structure:
 
@@ -97,7 +97,16 @@ def spontaneusNeutrality(epsilon, p_neutral, neighborhood):
 
     for state, number_of_zeros, number_of_ones, number_of_twos in neighborhood:
         if state in [1, 2]:
-            rand = np.random.rand()  # uses uniform distribution (change for lognormal?)
+
+            if dist_type == 'uniform':
+                rand = np.random.rand()
+
+            elif dist_type == 'normal':
+                rand = np.random.normal(0, 1) 
+
+            elif dist_type == 'lognormal':
+                rand = np.random.lognormal(0, 1)
+
             if rand < prob:
                 new_states.append(0)
             else:
@@ -107,7 +116,7 @@ def spontaneusNeutrality(epsilon, p_neutral, neighborhood):
 
     return np.array(new_states)
 
-def spontaneousChirality(epsilon, p_chiral, neighborhood):
+def spontaneousChirality(epsilon, p_chiral, neighborhood, dist_type='uniform'):
     """
     Reads a neighborhood array with the following structure:
 
@@ -131,7 +140,16 @@ def spontaneousChirality(epsilon, p_chiral, neighborhood):
 
     for state, number_of_zeros, number_of_ones, number_of_twos in neighborhood:
         if state == 0:
-            rand = np.random.rand()  # uses uniform distribution
+
+            if dist_type == 'uniform':
+                rand = np.random.rand()
+
+            elif dist_type == 'normal':
+                rand = np.random.normal(0, 1) 
+
+            elif dist_type == 'lognormal':
+                rand = np.random.lognormal(0, 1)
+
             if rand < prob:
                 new_states.append(1 if np.random.rand() < 0.5 else 2)  # 50% chance to become 1 or 2
             else:
@@ -141,7 +159,7 @@ def spontaneousChirality(epsilon, p_chiral, neighborhood):
 
     return np.array(new_states)
 
-def diffusion(epsilon, p_copy, neighborhood):
+def diffusion(epsilon, p_copy, neighborhood, dist_type='uniform'):
     """
     Reads a neighborhood array with the following structure:
 
@@ -164,7 +182,16 @@ def diffusion(epsilon, p_copy, neighborhood):
     prob = epsilon * p_copy
 
     for state, number_of_zeros, number_of_ones, number_of_twos in neighborhood:
-        rand = np.random.rand()  # uses uniform distribution
+
+        if dist_type == 'uniform':
+            rand = np.random.rand()
+
+        elif dist_type == 'normal':
+            rand = np.random.normal(0, 1)
+
+        elif dist_type == 'lognormal':
+            rand = np.random.lognormal(0, 1)
+
         if rand < prob:
             neighbors_states = [0]*number_of_zeros + [1]*number_of_ones + [2]*number_of_twos
             new_states.append(np.random.choice(neighbors_states))  # also uses uniform distribution but can be changed
