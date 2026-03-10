@@ -5,6 +5,7 @@ def chiralPopulationPlot(chiralPop):
     """
     Populations over time
     """
+    
 
 def chaosParameterPlot():
     """
@@ -14,11 +15,6 @@ def chaosParameterPlot():
 def phaseSpacePlot():
     """
     Phase space plot
-    """
-
-def spatialPlot():
-    """
-    Spatial plot
     """
 
 def spatialgif():

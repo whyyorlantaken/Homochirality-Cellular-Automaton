@@ -36,6 +36,9 @@
 import numpy as np
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib.animation import FuncAnimation, PillowWriter
 
 from .counts import getMooreCounts
 from .rules import *
@@ -180,6 +183,26 @@ class ChiralTwin:
             if self.chaos_mode == 'pulse':
                 name = f"{self.chaos_mode}-{self.pulse_magnitude}_dist-{self.dist_type}"
 
-            np.save(f"data/time-evolution/{name}/images.npy", images)
+            np.save(f"data/time-evolution/{name}/data-box.npy", images)
+
+            data = np.load(f"data/time-evolution/{name}/data_box.npy")
+
+            # Class colors: 0,1,2
+            cmap = ListedColormap(["white", "#ea7ac6", "#658338"])
+            norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5], cmap.N)
+
+            fig, ax = plt.subplots()
+            im = ax.imshow(data[0], cmap=cmap, norm=norm, interpolation="nearest")
+            ax.set_axis_off()
+
+            def update(t):
+                im.set_data(data[t])
+                ax.set_title(f"t = {t}")
+                return [im]
+
+            ani = FuncAnimation(fig, update, frames=data.shape[0], interval=120, blit=True)
+
+            # Save GIF
+            ani.save(f"data/time-evolution/{name}/spatial.gif")
 
         return list_0, list_1, list_2
