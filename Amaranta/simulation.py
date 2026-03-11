@@ -112,7 +112,7 @@ class ChiralTwin:
 
         # initialize 3d array to save images (time, x, y)
         if self.save_images:
-            images = np.zeros((self.total_steps, *self.array.shape), dtype=int)
+            data = np.zeros((self.total_steps, *self.array.shape), dtype=int)
 
         # Save initial state counts
         unique, counts = np.unique(self.array, return_counts=True)
@@ -125,7 +125,7 @@ class ChiralTwin:
         for i in range(self.total_steps):
             
             if self.save_images:
-                images[i] = self.array
+                data[i] = self.array
 
             # Modes logic is done here.
             if self.chaos_mode == 'pulse':
@@ -182,10 +182,6 @@ class ChiralTwin:
 
             if self.chaos_mode == 'pulse':
                 name = f"{self.chaos_mode}-{self.pulse_magnitude}_dist-{self.dist_type}"
-
-            np.save(f"data/time-evolution/{name}/data_box.npy", images)
-
-            data = np.load(f"data/time-evolution/{name}/data_box.npy")
 
             # Class colors: 0,1,2
             cmap = ListedColormap(["white", "#ea7ac6", "#658338"])
