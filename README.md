@@ -1,9 +1,10 @@
 <img src="project image/logo_header.png" alt="Logo" width="600">
 
+### A digital twin of prebiotic chiral symmetry breaking using a spatial cellular automaton.
 
-A digital twin of prebiotic chiral symmetry breaking using a spatial cellular automaton.
-
-
+[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Made with ❤️ in Ecuador](https://img.shields.io/badge/Made%20with%20❤️%20in-Ecuador-purple)]()
 
 ## Problem
 Homochirality is the preferred handedness of molecules in living systems. This project explores the conditions under which homochirality robustly emerges, persists, or fails when varying environmental complexity, represented by a chaos parameter ε.
