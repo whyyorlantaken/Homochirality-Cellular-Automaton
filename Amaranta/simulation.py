@@ -175,6 +175,38 @@ class ChiralTwin:
             df = pd.DataFrame({'Achiral': list_0, 'Chiral A': list_1, 'Chiral B': list_2})
             df.to_csv(f"data/time-evolution/{name}/evolution.csv", index = False)
 
+            #gif of time evolution
+            fig, ax = plt.subplots(figsize=(4*1.3, 3*1.3), dpi=200)
+
+            line, = ax.plot([], [], label='Achiral', color='#4e0f04', lw=4)
+            line_chiral_a, = ax.plot([], [], label='Chiral A', color='#ea7ac6', lw=4)
+            line_chiral_b, = ax.plot([], [], label='Chiral B', color='#658338', lw=4)
+
+            ax.set_xlim(0, len(df) - 1)
+            ax.set_ylim(0, df['Achiral'].max())
+            #ax.set_xlabel('Time')
+            #ax.set_ylabel('Cell Number')
+            #ax.set_title("t = 0")
+            ax.legend(fontsize=12, loc='upper right')
+            ax.grid(color='gray', linestyle='--', lw=0.5, alpha=0.3)
+
+            def update(t):
+                x = np.arange(t + 1)
+                y = df['Achiral'].iloc[:t + 1]
+                y_chiral_a = df['Chiral A'].iloc[:t + 1]
+                y_chiral_b = df['Chiral B'].iloc[:t + 1]
+                line.set_data(x, y)
+                line_chiral_a.set_data(x, y_chiral_a)
+                line_chiral_b.set_data(x, y_chiral_b)
+                #ax.set_title(f"t = {t}")
+                return [line, line_chiral_a, line_chiral_b]
+
+            ani = FuncAnimation(fig, update, frames=df['Achiral'].shape[0], interval=120, blit=True)
+
+            # Save GIF
+            ani.save(f"data/time-evolution/{name}/time_evolution.gif", writer=PillowWriter(fps=8))
+            plt.close(fig)
+
         # Save images
         if self.save_images:
 
@@ -187,13 +219,13 @@ class ChiralTwin:
             cmap = ListedColormap(["white", "#ea7ac6", "#658338"])
             norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5], cmap.N)
 
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(4, 4))
             im = ax.imshow(data[0], cmap=cmap, norm=norm, interpolation="nearest")
             ax.set_axis_off()
 
             def update(t):
                 im.set_data(data[t])
-                ax.set_title(f"t = {t}")
+                #ax.set_title(f"t = {t}")
                 return [im]
 
             ani = FuncAnimation(fig, update, frames=data.shape[0], interval=120, blit=True)
