@@ -183,7 +183,7 @@ class ChiralTwin:
             if self.chaos_mode == 'pulse':
                 name = f"{self.chaos_mode}-{self.pulse_magnitude}_dist-{self.dist_type}"
 
-            np.save(f"data/time-evolution/{name}/data-box.npy", images)
+            np.save(f"data/time-evolution/{name}/data_box.npy", images)
 
             data = np.load(f"data/time-evolution/{name}/data_box.npy")
 
