@@ -1,4 +1,4 @@
-![Amaranta Logo](project image/logo_name.png)
+<img src="project image/logo_header.png" alt="Logo" width="700">
 
 
 A digital twin of prebiotic chiral symmetry breaking using a spatial cellular automaton.
