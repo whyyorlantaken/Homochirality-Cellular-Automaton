@@ -36,6 +36,8 @@
 import numpy as np
 import pandas as pd
 import os
+import time
+import warnings
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from matplotlib.animation import FuncAnimation, PillowWriter
@@ -98,6 +100,29 @@ class ChiralTwin:
             self.lin_start_epsilon = config['chaos']['linear']['start_epsilon']
             self.lin_end_epsilon   = config['chaos']['linear']['end_epsilon']
 
+        # Print params
+        print(f"    ===========================================================================")
+        print(f"    PARAMETERS")
+        print()
+        print(f"       General")
+        print(f"         > Initial condition:  {self.icname}.npy")
+        print(f"         > Boundary condition: {self.boundary_condition}")
+        print(f"         > Total steps:        {self.total_steps}")
+        print(f"         > Save evolution:     {self.save_evolution}")
+        print(f"         > Save images:        {self.save_images}")
+        print()
+        print(f"       Chaos")
+        print(f"         > Mode:               {self.chaos_mode}")
+        print(f"         > Magnitude:          {self.epsilon}")
+        print()
+        print(f"       Probabilities")
+        print(f"         > Distribution type:  {self.dist_type}")
+        print(f"         > Seed:               {self.seed}")
+        print(f"         > P(neutral):         {self.p_neutral:.2f}")
+        print(f"         > P(chiral):          {self.p_chiral:.2f}")
+        print(f"         > P(copy):            {self.p_copy:.2f}")
+        print(f"    ===========================================================================")
+
     def timeEvolution(self):
         """
         Simulates the time evolution of the system based on the defined rules and parameters.
@@ -122,6 +147,13 @@ class ChiralTwin:
         list_0.append(count_dict.get(0, 0))
         list_1.append(count_dict.get(1, 0))
         list_2.append(count_dict.get(2, 0))
+
+        # Info
+        print(f"    EVOLUTION")
+        print()
+        print(f"       Progress")
+
+        start_time = time.time()
         
         # Time evolution loop
         for i in range(self.total_steps):
@@ -163,7 +195,19 @@ class ChiralTwin:
             list_1.append(count_dict.get(1, 0))
             list_2.append(count_dict.get(2, 0))
 
-        print(f"Time evolution completed!")
+            # Progess each 20% of the evolution
+            if self.total_steps >= 5 and (i + 1) % (self.total_steps // 5) == 0:
+                print(f"         - {i + 1}/{self.total_steps}")
+
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
+        print(f"         > Success!")
+        print()
+        print(f"       Performance")
+        print(f"         > Total time:         {elapsed_time:.2f}s")
+        print(f"         > Time per step:      {elapsed_time / self.total_steps:.4f}s")
+        print(f"    ===========================================================================")
         
         # Save evolution
         if self.save_evolution:
@@ -212,9 +256,14 @@ class ChiralTwin:
             plt.savefig(f"data/time-evolution/{name}/time_evolution-{self.icname}.png", dpi=200)
             
             # Save GIF
-            ani.save(f"data/time-evolution/{name}/time_evolution-{self.icname}.gif", writer=PillowWriter(fps=8))
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                ani.save(f"data/time-evolution/{name}/time_evolution-{self.icname}.gif", writer=PillowWriter(fps=8))
             plt.close(fig)
-            print(f"Time evolution GIF saved!")
+
+            print(f"       Time evolution")
+            print(f"          > Data: evolution-{self.icname}.csv")
+            print(f"          > GIF:  time_evolution-{self.icname}.gif")
 
         # Save images
         if self.save_images:
@@ -244,7 +293,20 @@ class ChiralTwin:
             plt.savefig(f"data/time-evolution/{name}/spatial-{self.icname}.png", dpi=200)
             
             # Save GIF
-            ani.save(f"data/time-evolution/{name}/spatial-{self.icname}.gif")
-            print(f"Spatial GIF saved!")
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                ani.save(f"data/time-evolution/{name}/spatial-{self.icname}.gif")
+
+            print()
+            print(f"       Spatial evolution")
+            print(f"          > PNG:  spatial-{self.icname}.png")
+            print(f"          > GIF:  spatial-{self.icname}.gif")
+            print(f"    ===========================================================================")
+        print()
+        print(f"                              Simulation completed.")
+        print()
+        print(f"    ===========================================================================")
+
+            # print(f"Spatial GIF saved!")
 
         return list_0, list_1, list_2

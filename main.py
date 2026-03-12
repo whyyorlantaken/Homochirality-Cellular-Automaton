@@ -21,12 +21,12 @@ def main():
 
     # Initial condition array
     array = "data/initial-conditions/" + args.ic + ".npy"
-    print(f"Initial condition loaded")
+    # print(f"Initial condition loaded")
 
     # All other parameters
     with open(args.config, 'r') as f:
         config = yaml.safe_load(f)
-    print(f"Configuration loaded")
+    # print(f"Configuration loaded")
 
     # Run!
     twin = ChiralTwin(array, config)

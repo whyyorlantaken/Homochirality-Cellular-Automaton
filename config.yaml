@@ -1,8 +1,8 @@
 simulation:
-  total_steps: 250
+  total_steps: 100
   boundary_condition: "periodic"
-  save_evolution: True
-  save_images: True
+  save_evolution: False
+  save_images: False
 
 probs:
   dist_type: "lognormal"
