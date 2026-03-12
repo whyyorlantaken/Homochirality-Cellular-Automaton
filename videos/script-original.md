@@ -69,8 +69,8 @@ Our main results are:
 
 4. However, we didn't find the same results in higher resolution grids as seen here where neither of them dominate.
 
-5. We suspected that difference in the initial conditions would keep growing over time, but this was not always the case, especially in high-res simulations.
+5. Lastly, we suspected that differences in the initial conditions would keep growing over time, but this was not always the case, especially in high-res simulations.
 
 [Mariannly]
 
-> 📂 Check our repo to see the full results! Thank you!
+> 📂 Check our repo out to see the full results! Thank you!
